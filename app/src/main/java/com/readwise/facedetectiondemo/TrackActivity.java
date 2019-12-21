@@ -37,6 +37,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.TextureView;
 import android.view.View;
 import android.view.WindowManager;
@@ -171,6 +172,15 @@ public class TrackActivity extends AppCompatActivity {
             }
         });
         initBrightness();
+//        textureView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                Log.i("scottie","onTouch");
+//                final CameraImageSource cameraImageSource = new CameraImageSource(TrackActivity.this);
+//                cameraImageSource.getCameraControl().autoFocus();
+//                return false;
+//            }
+//        });
     }
 
     /**
@@ -181,7 +191,6 @@ public class TrackActivity extends AppCompatActivity {
         final CameraImageSource cameraImageSource = new CameraImageSource(this);
         // 设置预览界面
         cameraImageSource.setPreviewView(previewView);
-
         // 设置人脸检测图片资源
         faceDetectManager.setImageSource(cameraImageSource);
         // 设置人脸检测回调,其中 retCode为人脸检测回调值（0通常为检测到人脸),infos为人脸信息，frame为相机回调图片资源
@@ -296,7 +305,7 @@ public class TrackActivity extends AppCompatActivity {
      */
     private void setCameraType(CameraImageSource cameraImageSource) {
         // TODO 选择使用前置摄像头
-        cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_FRONT);
+//        cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_FRONT);
 
         // TODO 选择使用usb摄像头
         //  cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_USB);
@@ -304,7 +313,7 @@ public class TrackActivity extends AppCompatActivity {
         //  previewView.getTextureView().setScaleX(-1);
 
         // TODO 选择使用后置摄像头
-//         cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_BACK);
+         cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_BACK);
         // previewView.getTextureView().setScaleX(-1);
     }
 
@@ -391,8 +400,8 @@ public class TrackActivity extends AppCompatActivity {
                     info.mCenter_x + 2 + info.mWidth * 3 / 5,
                     info.mCenter_y + 2 + info.mWidth * 3 / 5);
             previewView.mapFromOriginalRectEx(rectCenter);
-//            previewView.mapToOriginalRect(rectCenter);
-//            previewView.mapFromOriginalRect(rectCenter);
+            previewView.mapToOriginalRect(rectCenter);
+            previewView.mapFromOriginalRect(rectCenter);
             // 绘制框
             paint.setStrokeWidth(mRound);
             paint.setAntiAlias(true);
