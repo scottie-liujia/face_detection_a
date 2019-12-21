@@ -15,6 +15,8 @@ import com.baidu.aip.face.camera.PermissionCallback;
 import com.baidu.idl.facesdk.FaceInfo;
 import com.readwise.facedetectiondemo.exception.FaceError;
 import com.readwise.facedetectiondemo.model.AccessToken;
+import com.readwise.facedetectiondemo.model.FaceSearchResponse;
+import com.readwise.facedetectiondemo.model.Person;
 import com.readwise.facedetectiondemo.model.User;
 import com.readwise.facedetectiondemo.utils.OnResultListener;
 import com.readwise.facedetectiondemo.widget.BrightnessTools;
@@ -94,8 +96,11 @@ public class TrackActivity extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 switch(msg.what){
                     case 1:
-                        User u = (User)msg.obj;
-                        Toast.makeText(TrackActivity.this, " 姓名:"+u.getUser_id(), Toast.LENGTH_LONG).show();
+                        FaceSearchResponse fsr = (FaceSearchResponse)msg.obj;
+                        if(fsr.getError_code().equals("0"))
+                            Toast.makeText(TrackActivity.this, "姓名:"+fsr.getPerson().getName()+"\n"+"部门:"+fsr.getPerson().getDepartment(), Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(TrackActivity.this, fsr.getMsg(), Toast.LENGTH_LONG).show();
                         break;
                 }
             }
@@ -207,9 +212,9 @@ public class TrackActivity extends AppCompatActivity {
                         byte[] datas = baos.toByteArray();
                         String s = Base64.encodeToString(datas,Base64.DEFAULT);
                         flag=true;
-                        APIService.getInstance().search(new OnResultListener<User>() {
+                        APIService.getInstance().faceSearch(new OnResultListener<FaceSearchResponse>() {
                             @Override
-                            public void onResult(User result) {
+                            public void onResult(FaceSearchResponse result) {
                                 Message message = Message.obtain();
                                 message.what = 1;
                                 message.obj = result;
@@ -291,7 +296,7 @@ public class TrackActivity extends AppCompatActivity {
      */
     private void setCameraType(CameraImageSource cameraImageSource) {
         // TODO 选择使用前置摄像头
-//        cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_FRONT);
+        cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_FRONT);
 
         // TODO 选择使用usb摄像头
         //  cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_USB);
@@ -299,7 +304,7 @@ public class TrackActivity extends AppCompatActivity {
         //  previewView.getTextureView().setScaleX(-1);
 
         // TODO 选择使用后置摄像头
-         cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_BACK);
+//         cameraImageSource.getCameraControl().setCameraFacing(ICameraControl.CAMERA_FACING_BACK);
         // previewView.getTextureView().setScaleX(-1);
     }
 
@@ -386,8 +391,8 @@ public class TrackActivity extends AppCompatActivity {
                     info.mCenter_x + 2 + info.mWidth * 3 / 5,
                     info.mCenter_y + 2 + info.mWidth * 3 / 5);
             previewView.mapFromOriginalRectEx(rectCenter);
-            previewView.mapToOriginalRect(rectCenter);
-            previewView.mapFromOriginalRect(rectCenter);
+//            previewView.mapToOriginalRect(rectCenter);
+//            previewView.mapFromOriginalRect(rectCenter);
             // 绘制框
             paint.setStrokeWidth(mRound);
             paint.setAntiAlias(true);

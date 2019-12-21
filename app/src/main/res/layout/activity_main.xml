@@ -14,7 +14,8 @@
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:text="人脸检测与识别"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <Button
         android:id="@+id/attr_btn"

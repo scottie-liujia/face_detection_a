@@ -111,5 +111,6 @@
     <orderEntry type="library" name="Gradle: com.android.support:support-compat:25.3.1@aar" level="project" />
     <orderEntry type="module" module-name="facesdk" />
     <orderEntry type="module" module-name="facesdk" />
+    <orderEntry type="module" module-name="facesdk" />
   </component>
 </module>

@@ -5,6 +5,8 @@ package com.readwise.facedetectiondemo;
 
 
 import com.readwise.facedetectiondemo.model.AccessToken;
+import com.readwise.facedetectiondemo.model.FaceSearchResponse;
+import com.readwise.facedetectiondemo.model.Person;
 import com.readwise.facedetectiondemo.model.User;
 import com.readwise.facedetectiondemo.utils.DeviceUuidFactory;
 import com.readwise.facedetectiondemo.utils.HttpUtil;
@@ -93,6 +95,7 @@ public class APIService {
         HttpUtil.getInstance().getAccessToken(listener, ACCESS_TOEKN_URL, sb.toString());
 
     }
+
     public String search(final OnResultListener<User> listener, String face){
         String url = "https://aip.baidubce.com/rest/2.0/face/v3/search?access_token="+accessToken;
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
@@ -142,6 +145,60 @@ public class APIService {
                         u.setUser_id("人员未登记");
                         listener.onResult(u);
                     }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return "ok";
+
+
+    }
+
+    public String faceSearch(final OnResultListener<FaceSearchResponse> listener, String face){
+        String url = "http://www.scottie-ai.com:8080/facedetection/FaceSearch";
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        JSONObject json = new JSONObject();
+        try {
+            json.put("face", face);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        OkHttpClient okHttpClient = new OkHttpClient();
+        RequestBody requestBody = RequestBody.create(JSON, String.valueOf(json));
+        Request request = new Request.Builder()
+                .url(url)
+                .post(requestBody)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //DialogUtils.showPopMsgInHandleThread(Release_Fragment.this.getContext(), mHandler, "数据获取失败，请重新尝试！");
+                Log.d("scottie","onFailure:"+e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String res = response.body().string();
+//                Log.d("scottie",res);
+                try {
+                    FaceSearchResponse fsr = new FaceSearchResponse();
+                    Person person = new Person();
+                    JSONObject resJosn = new JSONObject(res);
+                    String error_code = resJosn.getString("error_code");
+                    String msg = resJosn.getString("msg");
+                    fsr.setError_code(error_code);
+                    fsr.setMsg(msg);
+                    if(resJosn.has("person")){
+                        JSONObject personJson = (JSONObject)resJosn.getJSONObject("person");
+                        person.setId(personJson.getString("id"));
+                        person.setName(personJson.getString("name"));
+                        person.setDepartment(personJson.getString("department"));
+                        fsr.setPerson(person);
+                    }
+                    listener.onResult(fsr);
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
