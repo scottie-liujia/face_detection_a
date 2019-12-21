@@ -7,13 +7,14 @@
     android:gravity="center"
     android:orientation="vertical">
 
+
     <Button
         android:id="@+id/track_btn"
         android:layout_width="250dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
-        android:text="人脸检测与识别" />
-
+        android:text="人脸检测与识别"
+        android:visibility="gone"/>
 
     <Button
         android:id="@+id/attr_btn"
@@ -31,6 +32,35 @@
         android:layout_marginTop="10dp"
         android:text="人脸实时采集"
         android:visibility="gone"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/userCode_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:hint="请输入用户名"
+            android:text="" />
+
+        <EditText
+            android:id="@+id/password_editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:hint="请输入密码"/>
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="进入Demo" />
+    </LinearLayout>
 
 
 </LinearLayout>
